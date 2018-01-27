@@ -42,7 +42,6 @@ showworld_simple.o: showworld_simple.c showworld.h
 
 agent.o: agent.c agent.h
 
-
 world.o: world.c world.h
 
 # The following rule cleans all compiled (objects) and linked (executable
