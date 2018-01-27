@@ -8,7 +8,7 @@
 #define WORLD_X 20
 #define WORLD_Y 20
 #define MAX_TURNS 1000
-#define N_HUMANS 2
+#define N_HUMANS 1
 #define N_ZOMBIES 1
 #define P_HUMANS 1
 #define P_ZOMBIES 1
@@ -19,11 +19,11 @@
 unsigned int example_get_ag_info (void *world, unsigned int x, unsigned int y);
 
 struct agents {
-    unsigned int x[100];
-    unsigned int y[100];
-    unsigned int id[100];
-    unsigned int play[100];
-    AGENT_TYPE type[100];
+	unsigned int x[N_HUMANS + N_ZOMBIES];
+	unsigned int y[N_HUMANS + N_ZOMBIES];
+	unsigned int ID[N_HUMANS + N_ZOMBIES];
+	unsigned int play[N_HUMANS + N_ZOMBIES];
+	AGENT_TYPE type[N_HUMANS + N_ZOMBIES];
 };
 
 struct agents ag;
@@ -38,7 +38,7 @@ struct agents ag;
  * */
 int main() {
 	
-	int x, y, i, playable;
+	unsigned int i, playable;
 
 	/** Inicialicamos o nosso world a null*/
 	WORLD *wrld = world_new (WORLD_X, WORLD_Y);
@@ -49,113 +49,132 @@ int main() {
 	srand (time(NULL));
 
 	// Incializar agentes e colocalos aleatoriamente no mundo
-	for (i = 0; i < N_HUMANS; i++) {
+	for (i = 0; i < N_HUMANS; ++i) {
 
-		x = (rand() % WORLD_X);
-		y = (rand() % WORLD_Y);
+		unsigned int x = (rand() % WORLD_X);
+		unsigned int y = (rand() % WORLD_Y);
 
 		if (world_get (wrld, x, y) == NULL) {
 			world_put (wrld, x, y, (ITEM *) agent_new (Human, i, i < P_HUMANS));
-			ag.id[i] = i;
+			ag.ID[i] = i;
 			ag.type[i] = Human;
 			ag.play[i] = playable;
 			ag.x[i] = x;
 			ag.y[i] = y;
-	 	} else {
-	 		i--;
-	 	}
+			printf("Humano %03x   x:%02d y:%02d\n", ag.ID[i], ag.x[i], ag.y[i]);
+		} else {
+			i--;
+		}
+		if (i == N_HUMANS - 1) { printf("\n"); }
 	}
-	for (i = N_HUMANS; i < N_HUMANS + N_ZOMBIES; i++) {
+	for (i = N_HUMANS; i < N_HUMANS + N_ZOMBIES; ++i) {
 
-		x = (rand() % WORLD_X);
-		y = (rand() % WORLD_Y);
+		unsigned int x = (rand() % WORLD_X);
+		unsigned int y = (rand() % WORLD_Y);
 
 		if (world_get (wrld, x, y) == NULL) {
 			world_put (wrld, x, y, (ITEM *) agent_new (Zombie, i, i < N_HUMANS + P_ZOMBIES));
-			ag.id[i] = i + N_HUMANS;
+			ag.ID[i] = i + N_HUMANS;
 			ag.type[i] = Zombie;
 			ag.play[i] = playable;
 			ag.x[i] = x;
 			ag.y[i] = y;
-	 	} else {
-	 		i--;
-	 	}
+			printf("Zombie %03x   x:%02d y:%02d\n", ag.ID[i] - N_HUMANS, ag.x[i], ag.y[i]);
+		} else {
+			i--;
+		}
+		if (i == N_HUMANS + N_ZOMBIES - 1) { printf("\n"); }
 	}
 
-	for (int turn = 0; turn < MAX_TURNS; turn++) {
+	for (int turn = 0; turn < MAX_TURNS; ++turn) {
 		// SCANNER
-		for (unsigned int y = 0; y < wrld->ydim; ++y) {
 
-			for (unsigned int x = 0; x < wrld->xdim; ++x) {
+		int move = 3;
 
-				int move = 3;
-
-				for (int na = 0; na < N_HUMANS + N_ZOMBIES; na++) {
+		for (int a = 0; a < N_HUMANS + N_ZOMBIES; ++a) {
 					
-					int xAnt = ag.x[na];
-					int yAnt = ag.y[na];
+			int xOLD = ag.x[a];
+			int yOLD = ag.y[a];
 
-					for (int i = 1; i <= 3; i++) {
+			for (int l = 1; l <= WORLD_X; ++l) { 									// change me
 
-						for (int j = 1; j <= 2; j++) {
+				for (int j = 1; j <= 2; ++j) {
 
-							if (move == 4) {
-								move = 1;
-							} else move += 1;
-							for (int block = 1; block <= i; block++) {
+					if (move == 4) {
+						move = 1;
+					} else move += 1;
 
-								switch (move) {
-									case 1:
-										// Mexe para a direita i vezes
-										ag.x[na] += 1;
-										toroidal (&ag.x[na], &ag.y[na]);
-										break;
-									case 2:
-										// Mexe para baixo i vezes
-										ag.y[na] += 1;
-										toroidal (&ag.x[na], &ag.y[na]);
-										break;
-									case 3:
-										// mexe para esquerda i vezes
-										ag.x[na] -= 1;
-										toroidal (&ag.x[na], &ag.y[na]);
-										break;
-									case 4:
-										// mexe para cima i vezes
-										ag.y[na] -= 1;
-										toroidal (&ag.x[na], &ag.y[na]);
-										break;
+					for (int scan = 1; scan <= l; ++scan) {
+
+						switch (move) {
+							case 1:
+								// Mexe para a direita l vezes
+								ag.x[a] += 1;
+								toroidal (&ag.x[a], &ag.y[a]);
+								if (wrld->grid[ag.y[a] * wrld->xdim + ag.x[a]] != None) {
+									printf("Encontrei x:%02d y:%02d    Estou x:%02d y:%02d  a:%02d l:%02d j:%02d\n", ag.x[a], ag.y[a], xOLD, yOLD,a,l,j);
+									ag.x[a] = xOLD;
+									ag.y[a] = yOLD;
 								}
-							printf ("Estou no   x:%02d e y:%02d\nComecei no x:%02d e y:%02d\n", ag.x[na], ag.y[na], xAnt, yAnt);
-							showworld_update (sw, wrld);
-							printf ("Pressione ENTER para o seguinte turno...");
-							getchar();
-							}
+								break;
+							case 2:
+								// Mexe para baixo l vezes
+								ag.y[a] += 1;
+								toroidal (&ag.x[a], &ag.y[a]);
+								if (wrld->grid[ag.y[a] * wrld->xdim + ag.x[a]] != None) {
+									printf("Encontrei x:%02d y:%02d    Estou x:%02d y:%02d  a:%02d l:%02d j:%02d\n", ag.x[a], ag.y[a], xOLD, yOLD,a,l,j);
+									ag.x[a] = xOLD;
+									ag.y[a] = yOLD;
+								}
+								break;
+							case 3:
+								// Mexe para esquerda l vezes
+								ag.x[a] -= 1;
+								toroidal (&ag.x[a], &ag.y[a]);
+								if (wrld->grid[ag.y[a] * wrld->xdim + ag.x[a]] != None) {
+									printf("Encontrei x:%02d y:%02d    Estou x:%02d y:%02d  a:%02d l:%02d j:%02d\n", ag.x[a], ag.y[a], xOLD, yOLD,a,l,j);
+									ag.x[a] = xOLD;
+									ag.y[a] = yOLD;
+								}
+								break;
+							case 4:
+								// Mexe para cima l vezes
+								ag.y[a] -= 1;
+								toroidal (&ag.x[a], &ag.y[a]);
+								if (wrld->grid[ag.y[a] * wrld->xdim + ag.x[a]] != None) {
+									printf("Encontrei x:%02d y:%02d    Estou x:%02d y:%02d  a:%02d l:%02d j:%02d\n", ag.x[a], ag.y[a], xOLD, yOLD,a,l,j);
+									ag.x[a] = xOLD;
+									ag.y[a] = yOLD;
+								}
+								break;
 						}
 					}
-				}	
+				}
 			}
 		}
+		showworld_update (sw, wrld);
+		printf("TURNO %03d\n", turn);
+		getchar();
 	}
 }
 
 void toroidal (int *x, int *y) {
-    int ax = *x;
-    int ay = *y;
+	int ax = *x;
+	int ay = *y;
 
-    if (ax > WORLD_X - 1) {
-        ax = 0;
-    } else if (ax < 0) {
-        ax = WORLD_X - 1;
-    }
-    if (ay > WORLD_Y - 1) {
-        ay = 0;
-    } else if (ay < 0) {
-        ay = WORLD_Y - 1;
-    }
+	if (ax > WORLD_X - 1) {
+		ax = 0;
+	} else if (ax < 0) {
+		ax = WORLD_X - 1;
+	}
+	if (ay > WORLD_Y - 1) {
+		ay = 0;
+	} else if (ay < 0) {
+		ay = WORLD_Y - 1;
+	}
 
-    *x = ax;
-    *y = ay;
+	*x = ax;
+	*y = ay;
 }
 
 /**
@@ -182,47 +201,47 @@ void toroidal (int *x, int *y) {
  * */
 unsigned int example_get_ag_info (void *w, unsigned int x, unsigned int y) {
 
-    /* The agent information to return. */
-    unsigned int ag_info = 0;
+	/* The agent information to return. */
+	unsigned int ag_info = 0;
 
-    /* Convert generic pointer to world to a WORLD object. */
-    WORLD *my_world = (WORLD *) w;
+	/* Convert generic pointer to world to a WORLD object. */
+	WORLD *my_world = (WORLD *) w;
 
-    /* Check if the given (x,y) coordinates are within bounds of the world. */
-    if ((x >= my_world->xdim) || (y >= my_world->ydim)) {
+	/* Check if the given (x,y) coordinates are within bounds of the world. */
+	if ((x >= my_world->xdim) || (y >= my_world->ydim)) {
 
-        /* If we got here, then the coordinates are off bounds. As such we will
-           report that the requested agent is of unknown type. No need to
-           specify agent ID or playable status, since the agent is unknown. */
-        ag_info = Unknown;
+		/* If we got here, then the coordinates are off bounds. As such we will
+		   report that the requested agent is of unknown type. No need to
+		   specify agent ID or playable status, since the agent is unknown. */
+		ag_info = Unknown;
 
-    } else {
+	} else {
 
-        /* Given coordinates are within bounds, let's get and pack the request
-           agent information. */
+		/* Given coordinates are within bounds, let's get and pack the request
+		   agent information. */
 
-        /* Obtain agent at specified coordinates. */
-        AGENT *ag = (AGENT *) world_get (my_world, x, y);
+		/* Obtain agent at specified coordinates. */
+		AGENT *ag = (AGENT *) world_get (my_world, x, y);
 		
-        /* Is there an agent at (x,y)? */
-        if (ag == NULL) {
+		/* Is there an agent at (x,y)? */
+		if (ag == NULL) {
 
-            /* If there is no agent at the (x,y) coordinates, set agent type to
-               None. No need to specify agent ID or playable status, since
-               there is no agent here. */
-            ag_info = None;
+			/* If there is no agent at the (x,y) coordinates, set agent type to
+			   None. No need to specify agent ID or playable status, since
+			   there is no agent here. */
+			ag_info = None;
 
-        } else {
+		} else {
 
-            /* If we get here it's because there is an agent at (x,y). Bit-pack
-               all the agent information as specified by the get_agent_info_at
-               function pointer definition. */
-            ag_info = (ag->ID << 3) | (ag->playable << 2) | ag->type;
+			/* If we get here it's because there is an agent at (x,y). Bit-pack
+			   all the agent information as specified by the get_agent_info_at
+			   function pointer definition. */
+			ag_info = (ag->ID << 3) | (ag->playable << 2) | ag->type;
 
-        }
+		}
 
-    }
+	}
 
-    /* Return the requested agent information. */
-    return ag_info;
+	/* Return the requested agent information. */
+	return ag_info;
 }
