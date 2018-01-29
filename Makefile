@@ -13,12 +13,12 @@ CFLAGS=-Wall -Wextra -Wpedantic -std=c99 -g
 # Linker library location flags (e.g. -L)
 LDFLAGS=
 # Linker library flags (e.g. -l)
-LDLIBS=
+LDLIBS=-lg2
 
 ### Regular variables
 
 # Name of program
-PROGRAM=example
+PROGRAM=jogo
 
 ###
 ### Second part of a Makefile:
@@ -29,16 +29,18 @@ PROGRAM=example
 # is generated when "make" is executed. Because no explicit recipe is given,
 # the "make" program will use the implicit rule for linking all object files
 # into an executable program.
-$(PROGRAM): $(PROGRAM).o showworld_simple.o world.o agent.o
+$(PROGRAM): $(PROGRAM).o showworld_simple.o world.o agent.o world_canvas_g2.o
 
 # Rule to generate program object. Again, because no explicit recipe is given,
 # "make" will use an implicit rule for properly compiling $(PROGRAM).o.
-$(PROGRAM).o: $(PROGRAM).c showworld.h
+$(PROGRAM).o: $(PROGRAM).c agent.h world.h showworld.h world_canvas.h
 
 # Rule to generate showworld_simple.o object. Again, because no explicit recipe
 # is given, "make" will use an implicit rule for properly compiling
 # showworld_simple.o.
 showworld_simple.o: showworld_simple.c showworld.h
+
+world_canvas_g2.o: world_canvas_g2.c world_canvas.h agent.h
 
 agent.o: agent.c agent.h
 
