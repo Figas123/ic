@@ -38,4 +38,4 @@ Este projeto, não obstante de sua exigência e de não ter sido terminado, fez-
 
 **Repositório do projeto**
 
-![](https://github.com/figas123/ic)
+https://github.com/figas123/ic
