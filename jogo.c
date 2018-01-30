@@ -32,6 +32,9 @@ int main() {
 	unsigned int i;
 	/** Inicializamos o mundo a null */
 	WORLD *wrld = world_new (WORLD_X, WORLD_Y);
+    CANVAS wrld_cnvs = NULL;
+    /** Criar canvas onde desenhar o mundo de agentes. */
+    wrld_cnvs = world_canvas_new(wrld);
 	/** Inicializamos a visualizacao do mundo */
 	SHOWWORLD *sw = showworld_new (WORLD_X, WORLD_Y, example_get_ag_info);
 	/** Funcao para fazer uma seed de numeros aleatorios */
@@ -42,7 +45,7 @@ int main() {
 		/** Criar variaveis x e y aleatorias */
 		unsigned int x = (rand() % WORLD_X);
 		unsigned int y = (rand() % WORLD_Y);
-		/** Se a coordenada no mundo for null pomos la um humano */
+		/** Se a coordenada no mundo for null pomo-la um humano */
 		if (world_get (wrld, x, y) == NULL) {
 			world_put (wrld, x, y, (ITEM *) agent_new (Human, i, i < P_HUMANS));
 			ag.ID[i] = i;
@@ -61,7 +64,7 @@ int main() {
 		/** Criar variaveis x e y aleatorias */
 		unsigned int x = (rand() % WORLD_X);
 		unsigned int y = (rand() % WORLD_Y);
-		/** Se a coordenada no mundo for null pomos la um zombie */
+		/** Se a coordenada no mundo for null pomo-la um zombie */
 		if (world_get (wrld, x, y) == NULL) {
 			world_put (wrld, x, y, (ITEM *) agent_new (Zombie, i, i < N_HUMANS + P_ZOMBIES));
 			ag.ID[i] = i;
@@ -83,6 +86,8 @@ int main() {
 			/** Cria variaveis para memorizar a posicao inicial do agente */
 			unsigned int xOLD = ag.x[a];
 			unsigned int yOLD = ag.y[a];
+			/* Atualizar canvas onde esta' a ser mostrado o mundo de agentes. */
+			world_canvas_update(wrld_cnvs, wrld);
 			/** Imprime o mundo */
 			showworld_update (sw, wrld);
 			printf("TURNO  %03d\n\n", turn);

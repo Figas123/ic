@@ -1,40 +1,38 @@
-# Title of project
+# The Apocalypse
 
-* Student name 1 - a0000001
-* Student name 2 - a0000002
-* Student name 3 - a0000003
+**Autores:**
 
-## Our solution
+Nuno Miguel Figueiredo a21705451
+Pedro Inácio a21792545
+Tomas Mendes Nogueiro a21703305 
 
-Here we'll describe our solution.
+**Descrição da solução**
 
-### Architecture
+O projeto foi programado e estruturado na linguagem C. 
 
-Here we'll describe the architecture of our game, namely how the game was
-structured. A flow diagram would probably be nice.
+![](https://i.imgur.com/2EPiEeV.png)
 
-### Data structures
+**Estruturas de dados** 
 
-Brief description of the implemented data structures for this game.
+Existem dois agentes, Zombies e Humanos espalhados aleatoriamente numa grelha tendo esta, dimensões variaveis. Existem 20 Zombies e 20 Humanos.
 
-### Algorithms
+## Manual de utilizador:
 
-Brief description of the algorithms developed for this game. Some very short
-and readable pseudo-code would be nice.
+**Como compilar:**
 
-## User guide
+Para compilar basta escrever o comando "make".
 
-Our game is very simple. Here we explain how to play it.
+**Como jogar:**
 
-## Conclusions
+- Modo Interativo - 
 
-What did we learn by developing this game?
+Para mover os agentes é necessário, antes de tudo, ativar o numLK. Após a ativação, o jogador está pronto para jogar usando as teclas 2 4 6 e 8 do numpad.
 
-## References
+- Modo Automático - 
 
-* <a name="ref1">\[1\]</a> Pereira, A. (2017). C e Algoritmos, 2ª edição. Sílabo.
-* <a name="ref2">\[2\]</a> Reagan, P. (2014). [Game Programming in C with the
-Ncurses Library](https://www.viget.com/articles/game-programming-in-c-with-the-ncurses-library),
-Viget Labs.
-* <a name="ref3">\[3\]</a> [2D game development basics (2010)](https://stackoverflow.com/questions/3144399/2d-game-development-basics),
-stackoverflow.com
+Para passar para o próximo turno , o jogador terá que clicar na tecla " Enter".
+
+**Conclusões e matéria aprendida.**
+
+Este projeto, não obstante de sua exigência e de não ter sido terminado, fez-nos entender melhor a matéria que já tinha sido leccionada em aula, conhecendo a linguagem C pela sua dificuldade. Independentemente de o projeto não estar acabado, cada um de nós tentou fazer aquilo que conseguia não recorrendo a ajudas externas (com exceção dos amigos e professor) para desenvolver o trabalho. Concluímos também que o projeto teria sido mais fácil de se trabalhar se se tivesse explorado mais a parte prática durante as aulas. Os arrays e o uso dos "for" foram um dos pontos melhorados a nível do grupo visto que a difuldade para usá-los no início era bastante. Acreditamos que demos o nosso melhor e aproveitamos para agradecer ao professor o facto de ter adidado a entrega do projeto para este ser concluído.
+

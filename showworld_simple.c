@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define WHITE "\x1B[37m"
+#define GREEN  "\x1B[32m"
+#define YELLOW  "\x1B[33m"
+
 /** Estrutura do showworld */
 struct showworld {
     unsigned int xdim;
@@ -45,31 +49,31 @@ void showworld_update(SHOWWORLD *sw, void *w) {
             switch (ag_type) {
                 /** Se nao existir nenhum agente nas coordenadas */
                 case None:
-                    printf(" .  ");
+                    printf("%s .  ", WHITE);
                     break;
                 /** Se existir um humano nas coordenadas */
                 case Human:
                     if (playable) {
                         /** Caso o humano for jogavel */
-                        printf("H");
+                        printf("%sH%s", YELLOW, WHITE);
                     } else {
                         /** Caso o humano nao seja jogavel */
-                        printf("h");
+                        printf("%sh%s", YELLOW, WHITE);
                     }
                     /** Imprimir depois do tipo o id do agente */
-                    printf("%02X ", ag_id);
+                    printf("%s%02X %s", YELLOW, ag_id, WHITE);
                     break;
                 /** If zombie agent present at (x,y) print 'z' or 'Z'. */
                 case Zombie:
                     if (playable) {
                         /** Caso o zombie for jogavel */
-                        printf("Z");
+                        printf("%sZ%s", GREEN, WHITE);
                     } else {
                         /** Caso o zombie nao seja jogavel */
-                        printf("z");
+                        printf("%sz%s", GREEN, WHITE);
                     }
                     /** Imprimir depois do tipo o id do agente */
-                    printf("%02X ", ag_id);
+                    printf("%s%02X %s", GREEN, ag_id, WHITE);
                     break;
                 /** Em caso de bug */
                 default:

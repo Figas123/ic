@@ -15,9 +15,9 @@ CANVAS world_canvas_new(WORLD *wrld) {
     int *device;
     device = malloc(sizeof(int));
     /** Abrir janela com g2. Em Windows a funcao chama-se g2_open_win32() */
-    *device = g2_open_X11(wrld->xdim * 5, wrld->ydim * 5);
+    *device = g2_open_X11(wrld->xdim * 10 + 10, wrld->ydim * 10 + 10 );
     /** Especificar tamanho e forma dos agentes */
-    g2_set_QP(*device, 2, QPcirc);
+    g2_set_QP(*device, 10, QPcirc);
 
     return (CANVAS) device;
 }
@@ -36,11 +36,11 @@ void world_canvas_update(CANVAS cnvs, WORLD *wrld) {
                 switch (a->type) {
                     case Human:
                         g2_pen(device, YELLOW);
-                        g2_plot_QP(device, x, y);
+                        g2_plot_QP(device, x+1, y+1);
                         break;
                     case Zombie:
                         g2_pen(device, GREEN);
-                        g2_plot_QP(device, x, y);
+                        g2_plot_QP(device, x+1, y+1);
                         break;
                     default:
                         /** So vai aqui em caso de erro */
